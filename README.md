@@ -4,7 +4,7 @@
 
 Play local videos, streams, and web content as live wallpapers with
 multi-monitor support, GPU selection, Smart Playback, Music Dock,
-playlists, and optional DWT acceleration.
+and playlists.
 
 [Repository](https://github.com/Ziod1395/Live-Wallpaper-Manager) ·
 [MIT License](LICENSE) ·
@@ -24,7 +24,6 @@ playlists, and optional DWT acceleration.
 | 🎵 **Music Dock** | Floating now-playing controls with MPRIS and a live `cava` visualizer. |
 | 🕒 **Peaclock + Cava** | Independent clock/date and visualizer overlay using the shared Cava pipeline. |
 | 🔁 **Playlist** | Automatic wallpaper rotation with Sequential, Random, or Favorites modes. |
-| 🧰 **DWT** | Optional hardware-accelerated transcoding, thumbnails, previews, and caching. |
 | 🖥️ **Manager** | Full control from Wallpapers, Playlist, Visualizer, Monitor, Performance, Settings, and About pages. |
 | 🔔 **System Tray** | Quick Open/Close, Change Wallpaper, Restart, and Quit controls. |
 
@@ -41,7 +40,7 @@ playlists, and optional DWT acceleration.
 | `ffmpeg` / `ffprobe` | ✅ | Media processing |
 | `jq` | ✅ | JSON handling |
 | `hyprctl` | ✅ | Hyprland integration |
-| `python3` | ✅ | DWT and tray helper |
+| `python3` | ✅ | Tray helper |
 
 ### Optional
 
@@ -49,7 +48,6 @@ playlists, and optional DWT acceleration.
 |---|---|
 | `yt-dlp` | Streaming platforms |
 | `chromium` / `firefox` | Local HTML mode |
-| `curl` | DWT API |
 | `inotify-tools` | Automatic wallpaper-folder refresh |
 | `cava` / `playerctl` / `pipewire` | Music Dock and media detection |
 | `peaclock` | Peaclock + Cava Dock |
@@ -125,7 +123,6 @@ The installer can set up:
 
 - application files and desktop entries
 - system tray helper
-- DWT and its user service
 - default wallpaper data
 - login autostart
 
@@ -134,8 +131,6 @@ The installer can set up:
 ```bash
 test -f ~/.config/quickshell/livewallpaper/shell.qml && \
 echo "Live Wallpaper Manager installed"
-
-systemctl --user status dwt.service
 
 quickshell -c livewallpaper
 ```
@@ -299,61 +294,6 @@ selection.
 
 ---
 
-## 🧩 DWT Integration
-
-**Dynamic Wallpaper Transcoder (DWT)** is optional.
-
-It can:
-
-- scan your wallpaper library
-- detect media metadata
-- transcode using VAAPI, NVENC, QSV, or AMF when available
-- create thumbnails and previews
-- cache generated outputs
-
-Live Wallpaper Manager remains usable when DWT is unavailable.
-
-### Service commands
-
-```bash
-systemctl --user status dwt.service
-systemctl --user start dwt.service
-systemctl --user stop dwt.service
-systemctl --user restart dwt.service
-journalctl --user -u dwt.service -f
-```
-
-### Configuration
-
-```text
-~/.config/dwt/config.yaml
-```
-
-Example:
-
-```yaml
-watch_dirs:
-  - "~/Pictures/Live Wallpaper"
-
-hwaccel: auto
-max_concurrent_jobs: 2
-api_port: 8787
-```
-
-Do not point `watch_dirs` at your entire home directory.
-
-### Useful DWT commands
-
-```bash
-dwt daemon
-dwt scan
-dwt status
-dwt repair
-dwt init-config
-```
-
----
-
 ## ⚙️ Autostart
 
 The installer can enable a standard XDG login-session autostart entry.
@@ -386,7 +326,6 @@ setup does not consume XDG autostart entries directly.
 | Thumbnails | `~/.cache/livewallpaper/thumbs/` |
 | Runtime state | `~/.cache/livewallpaper/state/` |
 | Logs | `~/.cache/livewallpaper/logs/` |
-| DWT config | `~/.config/dwt/config.yaml` |
 
 CLI settings are handled by:
 
@@ -405,8 +344,8 @@ cd Live-Wallpaper-Manager
 ./update.sh
 ```
 
-The update script refreshes the installed application code and DWT package
-while preserving user data such as:
+The update script refreshes the installed application code while preserving
+user data such as:
 
 - settings
 - favorites
@@ -531,7 +470,6 @@ Core responsibilities are split across services such as:
 - `MultiMonitorService`
 - `GPUManagerService`
 - `SmartPlaybackService`
-- `DwtService`
 - `CavaService`
 - `MprisService`
 - `TrayService`
@@ -556,8 +494,6 @@ scripts/settings.sh
 scripts/cache.sh
 scripts/monitor.sh
 scripts/gpu_manager.sh
-scripts/dwt_status.sh
-scripts/dwt_optimize.sh
 ```
 
 ---
@@ -597,17 +533,6 @@ Run the bundled backend tests:
 
 ```bash
 bash tests/run_gpu_manager_tests.sh
-bash tests/run_dwt_integration_tests.sh
-```
-
-For DWT development:
-
-```bash
-cd dwt
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev,watch]"
-pytest
 ```
 
 ---
@@ -616,9 +541,6 @@ pytest
 
 Live Wallpaper Manager is licensed under the
 [MIT License](LICENSE).
-
-The DWT component is also MIT licensed; see
-[`dwt/LICENSE`](dwt/LICENSE).
 
 ---
 
