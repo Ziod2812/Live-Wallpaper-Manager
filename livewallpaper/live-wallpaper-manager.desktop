@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Live Wallpaper Manager
+GenericName=Wallpaper Manager
+Comment=Manage and switch live wallpapers (mpvpaper + Quickshell)
+Exec=bash -c "quickshell -c livewallpaper ipc call livewallpaper open 2>/dev/null || (quickshell -c livewallpaper -n & sleep 1; quickshell -c livewallpaper ipc call livewallpaper open)"
+Icon=__APP_ICON_PATH__
+Terminal=false
+Categories=Utility;Settings;
+Keywords=wallpaper;live;video;mpvpaper;quickshell;caelestia;

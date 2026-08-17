@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Name=Live Wallpaper Manager (App)
+GenericName=Wallpaper Manager Desktop App
+Comment=Open the Live Wallpaper Manager desktop application window
+Exec=bash -c "quickshell -c livewallpaper ipc call livewallpapermanager open 2>/dev/null || (quickshell -c livewallpaper -n & sleep 1; quickshell -c livewallpaper ipc call livewallpapermanager open)"
+Icon=__APP_ICON_PATH__
+Terminal=false
+Categories=Utility;Settings;
+Keywords=wallpaper;manager;app;window;dashboard;quickshell;
+Actions=OpenManager;
+
+[Desktop Action OpenManager]
+Name=Open Manager
+Exec=bash -c "quickshell -c livewallpaper ipc call livewallpapermanager open 2>/dev/null || (quickshell -c livewallpaper -n & sleep 1; quickshell -c livewallpaper ipc call livewallpapermanager open)"
+Icon=__APP_ICON_PATH__

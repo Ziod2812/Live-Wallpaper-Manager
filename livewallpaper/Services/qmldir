@@ -1,0 +1,23 @@
+module LiveWallpaper.Services
+singleton Paths 1.0 Paths.qml
+singleton SettingsService 1.0 SettingsService.qml
+singleton WallpaperService 1.0 WallpaperService.qml
+singleton HistoryService 1.0 HistoryService.qml
+singleton MultiMonitorService 1.0 MultiMonitorService.qml
+singleton PlaybackService 1.0 PlaybackService.qml
+singleton NotifyService 1.0 NotifyService.qml
+singleton GPUManagerService 1.0 GPUManagerService.qml
+singleton WatcherService 1.0 WatcherService.qml
+singleton PowerService 1.0 PowerService.qml
+singleton PlaylistService 1.0 PlaylistService.qml
+singleton CacheService 1.0 CacheService.qml
+singleton ApplicationService 1.0 ApplicationService.qml
+singleton CavaService 1.0 CavaService.qml
+singleton MprisService 1.0 MprisService.qml
+singleton SmartPlaybackService 1.0 SmartPlaybackService.qml
+singleton SystemStatsService 1.0 SystemStatsService.qml
+singleton TrayService 1.0 TrayService.qml
+
+singleton SmartPlaybackRuleEngine 1.0 SmartPlaybackRuleEngine.qml
+singleton SmartPlaybackStateMachine 1.0 SmartPlaybackStateMachine.qml
+singleton SmartPlaybackRecovery 1.0 SmartPlaybackRecovery.qml
