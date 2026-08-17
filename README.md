@@ -12,6 +12,14 @@ and playlists.
 
 ---
 
+## 🎥 Demo
+
+Watch the original TikTok showcase:
+
+[▶ Watch Demo](https://www.tiktok.com/@ziodenms/video/7666855041814318356)
+
+---
+
 ## ✨ Highlights
 
 | Feature | Description |
