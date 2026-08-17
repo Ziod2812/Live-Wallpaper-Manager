@@ -70,31 +70,29 @@ If ownership cannot be established, the package is left installed.
 
 ---
 
-## 🚀 Installation
+# 🚀 Installation
 
-Choose your distribution.
+> ⚠️ **Current installer support**
+>
+> `install.sh` and `uninstall.sh` currently provide full installation and removal support only for **Arch Linux / Arch-based distributions**.
+>
+> Support for Debian, Ubuntu, Fedora, and NixOS is planned for future releases.
+>
+> Do not run the installer on unsupported distributions yet.
 
-### Debian / Ubuntu
+---
 
-```bash
-git clone https://github.com/Ziod2812/Live-Wallpaper-Manager.git
-cd Live-Wallpaper-Manager
+## Arch Linux / Arch-based distributions ✅
 
-chmod +x install.sh uninstall.sh update.sh
-./install.sh
-```
+Supported:
 
-### Fedora
+- Arch Linux
+- CachyOS
+- EndeavourOS
+- Manjaro
+- Other Arch-based systems
 
-```bash
-git clone https://github.com/Ziod2812/Live-Wallpaper-Manager.git
-cd Live-Wallpaper-Manager
-
-chmod +x install.sh uninstall.sh update.sh
-./install.sh
-```
-
-### Arch Linux
+Install:
 
 ```bash
 git clone https://github.com/Ziod2812/Live-Wallpaper-Manager.git
@@ -102,29 +100,6 @@ cd Live-Wallpaper-Manager
 
 chmod +x install.sh uninstall.sh update.sh
 ./install.sh
-```
-
-> **Arch / AUR:** `quickshell` and `mpvpaper` may be installed through
-> [`yay`](https://github.com/Jguer/yay) or
-> [`paru`](https://github.com/Morganamilo/paru) when available.
-
-### NixOS
-
-There is no dedicated NixOS installer yet.
-
-Install the required dependencies using your Nix configuration, then follow
-the project setup compatible with your Quickshell and Hyprland environment.
-
-> Do not use `pacman`, `apt`, or `dnf` commands on NixOS.
-
-### After installation
-
-The installer can set up:
-
-- application files and desktop entries
-- system tray helper
-- default wallpaper data
-- login autostart
 
 ### Verify the installation
 
@@ -134,8 +109,6 @@ echo "Live Wallpaper Manager installed"
 
 quickshell -c livewallpaper
 ```
-
----
 
 ## ▶️ Launch
 
