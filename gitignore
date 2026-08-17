@@ -1,0 +1,46 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# --- Shell / runtime ---
+*.log
+*.tmp
+*.pid
+*.lock
+
+# --- Editors / IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- QML / Qt build artifacts ---
+*.qmlc
+*.jsc
+build/
+.qmake.stash
+Makefile
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# --- Local config / cache (nếu app tạo ra khi chạy) ---
+cache/
+*.cache
+config.local.*
+
+# --- Archive / packaging (đừng commit file zip đóng gói) ---
+*.zip
+*.tar.gz
+
+# --- Backup files ---
+*.bak
+*.orig
