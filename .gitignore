@@ -1,46 +1,96 @@
+# ====================================================================
+# CONFIGURATION FOR PYTHON / LINUX SHELL / QT PROJECTS
+# ====================================================================
+
+# --- Security / Secrets (Tuyệt đối không đẩy mã bảo mật lên Git) ---
+.env
+*.env
+.env.*
+secret*.json
+credentials*.json
+*.pem
+*.key
+
 # --- Python ---
 __pycache__/
 *.py[cod]
 *$py.class
 *.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.spyderproject
+.ropeproject
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pytest_cache/
+.hypothesis/
 
-# --- Shell / runtime ---
+# --- Shell / Runtime / Logs ---
 *.log
 *.tmp
 *.pid
 *.lock
+*.out
+*.err
 
-# --- Editors / IDE ---
+# --- Editors / IDEs ---
 .vscode/
+!.vscode/extensions.json
 .idea/
 *.swp
 *.swo
 *~
+.project
+.pydevproject
+.settings/
 
-# --- OS junk ---
+# --- OS Junk ---
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 desktop.ini
 
-# --- QML / Qt build artifacts ---
+# --- QML / Qt Build Artifacts ---
 *.qmlc
 *.jsc
 build/
+dist/
+*.egg-info/
 .qmake.stash
 Makefile
 moc_*.cpp
 qrc_*.cpp
 ui_*.h
+*.o
+*.a
+*.la
+*.lo
+*.so
 
-# --- Local config / cache (nếu app tạo ra khi chạy) ---
+# --- Local Config / Cache ---
 cache/
+.cache/
 *.cache
 config.local.*
 
-# --- Archive / packaging (đừng commit file zip đóng gói) ---
+# --- Archive / Packaging (Tránh đẩy tệp nén rác) ---
 *.zip
 *.tar.gz
+*.rar
+*.7z
 
-# --- Backup files ---
+# --- Backup Files ---
 *.bak
 *.orig
+*.save
