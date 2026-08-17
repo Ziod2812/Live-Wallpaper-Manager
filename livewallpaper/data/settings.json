@@ -1,0 +1,22 @@
+{
+    "theme": "catppuccin-mocha",
+    "opacity": 0.72,
+    "blur": true,
+    "radius": 20,
+    "resolution": "1080p",
+    "fps": "original",
+    "hwdec": "auto-safe",
+    "gpu_profile": "fast",
+    "gpu_mode": "auto",
+    "language": "en",
+    "monitor": "auto",
+    "performance": "balanced",
+    "autostart": true,
+    "auto_refresh": true,
+    "wallpaper_directory": "~/Pictures/Live Wallpaper",
+    "playlist_enabled": false,
+    "playlist_interval_minutes": 30,
+    "playlist_mode": "sequential",
+    "battery_resolution": "720p",
+    "battery_fps": "30"
+}

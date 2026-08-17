@@ -1,0 +1,7 @@
+module LiveWallpaper.Manager
+
+ManagerWindow 1.0 ManagerWindow.qml
+Sidebar 1.0 Sidebar.qml
+Toolbar 1.0 Toolbar.qml
+StatusBar 1.0 StatusBar.qml
+singleton Navigation 1.0 Navigation.qml

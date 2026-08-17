@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Globe icon for generic web / web mode -->
+  <circle cx="12" cy="12" r="9" fill="none" stroke="#a6e3a1" stroke-width="2"/>
+  <ellipse cx="12" cy="12" rx="4" ry="9" fill="none" stroke="#a6e3a1" stroke-width="2"/>
+  <line x1="3" y1="8" x2="21" y2="8" stroke="#a6e3a1" stroke-width="2" stroke-linecap="round"/>
+  <line x1="3" y1="16" x2="21" y2="16" stroke="#a6e3a1" stroke-width="2" stroke-linecap="round"/>
+</svg>
