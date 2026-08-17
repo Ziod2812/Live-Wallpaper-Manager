@@ -6,9 +6,9 @@ Play local videos, streams, and web content as live wallpapers with
 multi-monitor support, GPU selection, Smart Playback, Music Dock,
 and playlists.
 
-[Repository](https://github.com/Ziod1395/Live-Wallpaper-Manager) ·
-[MIT License](LICENSE) ·
-[Report an Issue](https://github.com/Ziod1395/Live-Wallpaper-Manager/issues)
+[Repository](https://github.com/ZIod1337/Live-Wallpaper-Manager) ·
+[MIT License](https://github.com/ZIod1337/Live-Wallpaper-Manager/blob/main/LICENSE) ·
+[Report an Issue](https://github.com/ZIod1337/Live-Wallpaper-Manager/issues)
 
 ---
 
@@ -77,7 +77,7 @@ Choose your distribution.
 ### Debian / Ubuntu
 
 ```bash
-git clone https://github.com/Ziod1395/Live-Wallpaper-Manager.git
+git clone https://github.com/ZIod1337/Live-Wallpaper-Manager.git
 cd Live-Wallpaper-Manager
 
 chmod +x install.sh uninstall.sh update.sh
@@ -87,7 +87,7 @@ chmod +x install.sh uninstall.sh update.sh
 ### Fedora
 
 ```bash
-git clone https://github.com/Ziod1395/Live-Wallpaper-Manager.git
+git clone https://github.com/ZIod1337/Live-Wallpaper-Manager.git
 cd Live-Wallpaper-Manager
 
 chmod +x install.sh uninstall.sh update.sh
@@ -97,7 +97,7 @@ chmod +x install.sh uninstall.sh update.sh
 ### Arch Linux
 
 ```bash
-git clone https://github.com/Ziod1395/Live-Wallpaper-Manager.git
+git clone https://github.com/ZIod1337/Live-Wallpaper-Manager.git
 cd Live-Wallpaper-Manager
 
 chmod +x install.sh uninstall.sh update.sh
@@ -356,7 +356,7 @@ user data such as:
 You can also update directly from a fresh clone:
 
 ```bash
-git clone https://github.com/Ziod1395/Live-Wallpaper-Manager.git
+git clone https://github.com/ZIod1337/Live-Wallpaper-Manager.git
 cd Live-Wallpaper-Manager
 chmod +x update.sh
 ./update.sh
