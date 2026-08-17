@@ -12,6 +12,22 @@ and playlists.
 
 ---
 
+## 🎥 Demo
+
+See Live Wallpaper Manager running on a real Hyprland setup.
+
+<p align="center">
+  <a href="https://www.tiktok.com/@ziodenms/video/7674876350288694548">
+    <img src="assets/tiktok-preview.png" alt="Live Wallpaper Manager Demo" width="700">
+  </a>
+</p>
+
+<p align="center">
+  <strong><a href="https://www.tiktok.com/@ziodenms/video/7674876350288694548">▶ Watch on TikTok</a></strong>
+</p>
+
+---
+
 ## ✨ Highlights
 
 | Feature | Description |
