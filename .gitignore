@@ -1,0 +1,59 @@
+# ===========================
+# Live Wallpaper Manager
+# ===========================
+
+# --- Secrets & credentials ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.crt
+*.p12
+
+# --- Python caches ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+
+# --- Build output ---
+dist/
+build/
+*.deb
+*.rpm
+*.tar.gz
+
+# --- Editor metadata ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+\#*\#
+.#*
+
+# --- OS metadata ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Runtime state (user-specific) ---
+livewallpaper/data/
+livewallpaper/logs/
+
+# --- Temporary files ---
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# --- Nix ---
+result
+result-*
+
+# --- Generated ---
+node_modules/
