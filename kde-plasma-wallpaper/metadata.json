@@ -1,0 +1,21 @@
+{
+    "KPackageStructure": "Plasma/Wallpaper",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Live Wallpaper Manager"
+            }
+        ],
+        "Category": "Wallpaper",
+        "Description": "Renders whatever Live Wallpaper Manager currently has applied (local video wallpaper, or a direct playable stream URL) using KDE Plasma's own native wallpaper plugin system -- no wlr-layer-shell involved, so it does not depend on the compatibility KWin does not provide for that protocol.",
+        "Icon": "video-x-generic",
+        "Id": "com.livewallpapermanager.plasmawallpaper",
+        "License": "GPL",
+        "Name": "Live Wallpaper Manager",
+        "ServiceTypes": [
+            "Plasma/Wallpaper"
+        ],
+        "Version": "1.0"
+    },
+    "X-Plasma-API": "declarativeappletscript"
+}
