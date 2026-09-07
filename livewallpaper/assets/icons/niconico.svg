@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Niconico simplified: white NN on dark bg -->
+  <rect x="1" y="3" width="22" height="18" rx="4" fill="#fab387" opacity="0.9"/>
+  <text x="12" y="16" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e1e2e" font-family="sans-serif">nico</text>
+</svg>

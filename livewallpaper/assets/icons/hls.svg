@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Wave lines representing HLS streaming -->
+  <path d="M1 12 Q3 8 5 12 Q7 16 9 12 Q11 8 13 12 Q15 16 17 12 Q19 8 21 12 Q23 16 24 12" stroke="#94e2d5" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <circle cx="12" cy="12" r="3" fill="#94e2d5" opacity="0.8"/>
+  <!-- Uplink arrow -->
+  <path d="M12 3 L12 7" stroke="#94e2d5" stroke-width="2" stroke-linecap="round"/>
+  <path d="M9 5 L12 2 L15 5" stroke="#94e2d5" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Bilibili simplified logo: TV-like shape with rabbit ears -->
+  <path d="M7 3 L5 1 M17 3 L19 1" stroke="#89b4fa" stroke-width="2" stroke-linecap="round"/>
+  <rect x="2" y="4" width="20" height="14" rx="3" fill="none" stroke="#89b4fa" stroke-width="2"/>
+  <rect x="2" y="4" width="20" height="14" rx="3" fill="#89b4fa" opacity="0.15"/>
+  <!-- Eyes -->
+  <circle cx="9" cy="11" r="2" fill="#89b4fa"/>
+  <circle cx="15" cy="11" r="2" fill="#89b4fa"/>
+  <!-- Mouth -->
+  <path d="M9 15 Q12 17 15 15" stroke="#89b4fa" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- Feet -->
+  <rect x="7" y="18" width="4" height="2" rx="1" fill="#89b4fa"/>
+  <rect x="13" y="18" width="4" height="2" rx="1" fill="#89b4fa"/>
+</svg>
