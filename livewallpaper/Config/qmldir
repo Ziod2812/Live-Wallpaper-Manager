@@ -1,2 +1,0 @@
-module LiveWallpaper.Config
-singleton Theme 1.0 Theme.qml
