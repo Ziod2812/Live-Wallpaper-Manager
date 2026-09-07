@@ -1,0 +1,249 @@
+#!/usr/bin/env bash
+#
+# lw-cli -- standalone terminal control for Live Wallpaper Manager
+# ------------------------------------------------------------------
+# NOT part of the QML UI in any way: no .qml file references, imports,
+# or is aware of this script's existence. It is a plain command-line
+# tool meant to be run by hand or wired into your own keybinds/scripts
+# (e.g. `bindd = , XF86AudioNext, lw-cli next`), independent of the
+# Manager app / panel UI.
+#
+# SOCKET DISCOVERY -- IMPORTANT CORRECTION vs. the original ask:
+# _mpv_ipc.py is just a fixed helper script (scripts/_mpv_ipc.py); it
+# does not store or "contain" the socket path anywhere, and there is
+# no socket-path file under /tmp/. The real mpv JSON-IPC socket is
+# created per monitor by utils.sh's lw_launch_mpvpaper() at:
+#     ~/.cache/livewallpaper/state/<sanitized-monitor-name>/mpv_ipc
+# or, for the legacy/single-global-state case (no specific monitor):
+#     ~/.cache/livewallpaper/mpv_ipc
+# This script re-uses that exact same layout (by sourcing utils.sh's
+# path helpers, never re-implementing them) instead of guessing.
+#
+# COMMANDS THAT NEED PLAYLIST STATE (next/prev) ARE DELEGATED:
+# mpvpaper is launched with a single looping file, not an mpv
+# playlist -- there is no mpv IPC command that means "next wallpaper
+# in the library". "next"/"prev" are database/order operations that
+# only next_wallpaper.sh / previous_wallpaper.sh know how to do (they
+# already use the app's safe mpv-reuse IPC path internally), so this
+# tool calls those directly instead of faking it with a raw socat
+# command that would silently do nothing.
+#
+# toggle / status / file are genuine single-socket mpv IPC operations
+# and talk to the socket directly via socat, as requested.
+
+set -uo pipefail
+
+# ─── Locate our own scripts directory (installed copy or repo checkout) ────
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
+# Fallback: when copied standalone to ~/.local/bin/lw-cli, SCRIPT_DIR
+# is ~/.local/bin, not the real scripts/ dir -- fall back to the known
+# install location (see install.sh's LWM_DEST) so utils.sh, next_wallpaper.sh
+# and previous_wallpaper.sh can still be found.
+LWM_INSTALLED_SCRIPTS="$HOME/.config/quickshell/livewallpaper/scripts"
+if [ ! -f "$SCRIPT_DIR/utils.sh" ] && [ -f "$LWM_INSTALLED_SCRIPTS/utils.sh" ]; then
+    SCRIPT_DIR="$LWM_INSTALLED_SCRIPTS"
+fi
+
+if [ ! -f "$SCRIPT_DIR/utils.sh" ]; then
+    echo "lw-cli: error: can't find utils.sh (looked in '$SCRIPT_DIR' and '$LWM_INSTALLED_SCRIPTS')." >&2
+    echo "        Is Live Wallpaper Manager installed? Run install.sh first." >&2
+    exit 1
+fi
+
+# shellcheck source=/dev/null
+source "$SCRIPT_DIR/utils.sh"
+
+PROG="lw-cli"
+
+usage() {
+    cat <<EOF
+Usage: $PROG <command> [args]
+
+Commands:
+  next              Switch to the next wallpaper
+  prev              Switch to the previous wallpaper
+  toggle            Toggle pause/play on the currently running wallpaper
+  file <path>       Load a specific video file directly (bypasses the
+                     library/order -- no resolution/vf/transition pipeline)
+  status            Print current file, position/duration, and pause state
+
+Options:
+  -m, --monitor <name>   Target a specific monitor's mpv instance
+                          (default: auto-detect focused monitor, then fall
+                          back to the legacy single/global instance)
+  -h, --help              Show this help
+EOF
+}
+
+err()  { echo "lw-cli: $*" >&2; }
+die()  { err "$*"; exit 1; }
+
+command -v socat >/dev/null 2>&1 || die "socat is not installed. Install it (e.g. 'sudo pacman -S socat') and try again."
+
+# ─── Argument parsing ───────────────────────────────────────────────────────
+MONITOR_OVERRIDE=""
+ARGS=()
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -m|--monitor)
+            [ $# -ge 2 ] || die "--monitor requires a value"
+            MONITOR_OVERRIDE="$2"
+            shift 2
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            ARGS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+set -- "${ARGS[@]:-}"
+[ $# -ge 1 ] || { usage; exit 1; }
+CMD="$1"
+shift || true
+
+# ─── Socket discovery ───────────────────────────────────────────────────────
+# Tests whether a socket path exists AND actually has mpv listening on it
+# (a stale/leftover socket file is not "alive"). Read-only, 1s timeout.
+sock_is_alive() {
+    local sock="$1"
+    [ -S "$sock" ] || return 1
+    local reply
+    reply="$(printf '%s\n' '{"command":["get_property","pid"],"request_id":1}' \
+        | timeout 1 socat -T1 - "UNIX-CONNECT:$sock" 2>/dev/null)"
+    [ -n "$reply" ] && printf '%s' "$reply" | grep -q '"error":"success"'
+}
+
+resolve_socket() {
+    local candidate
+
+    if [ -n "$MONITOR_OVERRIDE" ]; then
+        candidate="$(lw_monitor_state_file "$MONITOR_OVERRIDE" "mpv_ipc")"
+        sock_is_alive "$candidate" && { printf '%s' "$candidate"; return 0; }
+        return 1
+    fi
+
+    # 1) Focused monitor (multi-monitor setups), if we can detect one.
+    local focused=""
+    focused="$(lw_detect_monitor 2>/dev/null || true)"
+    if [ -n "$focused" ]; then
+        candidate="$(lw_monitor_state_file "$focused" "mpv_ipc")"
+        sock_is_alive "$candidate" && { printf '%s' "$candidate"; return 0; }
+    fi
+
+    # 2) Legacy/global single-instance socket.
+    candidate="$LW_CACHE_DIR/mpv_ipc"
+    sock_is_alive "$candidate" && { printf '%s' "$candidate"; return 0; }
+
+    # 3) Anything else alive under the per-monitor state dir.
+    local f
+    if [ -d "$LW_STATE_DIR" ]; then
+        for f in "$LW_STATE_DIR"/*/mpv_ipc; do
+            [ -e "$f" ] || continue
+            sock_is_alive "$f" && { printf '%s' "$f"; return 0; }
+        done
+    fi
+
+    return 1
+}
+
+# ─── Low-level single-command IPC helper (toggle/file/status) ─────────────
+# Sends one JSON command, waits briefly, returns the raw reply line(s).
+mpv_raw() {
+    local sock="$1" json="$2"
+    printf '%s\n' "$json" | timeout 2 socat -T1 - "UNIX-CONNECT:$sock" 2>/dev/null
+}
+
+mpv_cmd_ok() {
+    local sock="$1" json="$2" reply
+    reply="$(mpv_raw "$sock" "$json")"
+    printf '%s' "$reply" | grep -q '"error":"success"'
+}
+
+cmd_toggle() {
+    local sock
+    sock="$(resolve_socket)" || die "No running wallpaper found (mpv IPC socket not reachable). Is a wallpaper currently playing?"
+    if mpv_cmd_ok "$sock" '{"command":["cycle","pause"],"request_id":1}'; then
+        echo "Toggled pause/play."
+    else
+        die "Failed to send toggle command to $sock."
+    fi
+}
+
+cmd_file() {
+    local target="${1:-}"
+    [ -n "$target" ] || die "usage: $PROG file <path-to-video>"
+    [ -f "$target" ] || die "File not found: $target"
+    local abs_path
+    abs_path="$(cd "$(dirname "$target")" && pwd)/$(basename "$target")"
+
+    local sock
+    sock="$(resolve_socket)" || die "No running wallpaper found (mpv IPC socket not reachable). Is a wallpaper currently playing?"
+
+    local esc_path
+    esc_path="$(printf '%s' "$abs_path" | sed 's/\\/\\\\/g; s/"/\\"/g')"
+    if mpv_cmd_ok "$sock" "{\"command\":[\"loadfile\",\"$esc_path\",\"replace\"],\"request_id\":1}"; then
+        echo "Loaded: $abs_path"
+        echo "(Note: this bypasses the app's resolution/scaling/transition pipeline -- use the Manager UI or next/prev for those.)"
+    else
+        die "Failed to load '$abs_path' on $sock."
+    fi
+}
+
+cmd_status() {
+    local sock
+    sock="$(resolve_socket)" || die "No running wallpaper found (mpv IPC socket not reachable). Is a wallpaper currently playing?"
+
+    local raw
+    raw="$({
+        printf '%s\n' '{"command":["get_property","path"],"request_id":1}'
+        printf '%s\n' '{"command":["get_property","time-pos"],"request_id":2}'
+        printf '%s\n' '{"command":["get_property","duration"],"request_id":3}'
+        printf '%s\n' '{"command":["get_property","pause"],"request_id":4}'
+    } | timeout 2 socat -T1 - "UNIX-CONNECT:$sock" 2>/dev/null)"
+
+    [ -n "$raw" ] || die "No response from mpv on $sock."
+
+    if command -v jq >/dev/null 2>&1; then
+        local path pos dur paused
+        path="$(printf '%s' "$raw" | jq -rs 'map(select(.request_id==1 and .error=="success")) | .[0].data // "unknown"')"
+        pos="$(printf '%s' "$raw"  | jq -rs 'map(select(.request_id==2 and .error=="success")) | .[0].data // 0')"
+        dur="$(printf '%s' "$raw"  | jq -rs 'map(select(.request_id==3 and .error=="success")) | .[0].data // 0')"
+        paused="$(printf '%s' "$raw" | jq -rs 'map(select(.request_id==4 and .error=="success")) | .[0].data // false')"
+
+        printf 'File:     %s\n' "$(basename "$path" 2>/dev/null || echo "$path")"
+        printf 'Position: %.1fs / %.1fs\n' "$pos" "$dur" 2>/dev/null || printf 'Position: %s / %s\n' "$pos" "$dur"
+        if [ "$paused" = "true" ]; then
+            printf 'State:    Paused\n'
+        else
+            printf 'State:    Playing\n'
+        fi
+    else
+        echo "(jq not found -- printing raw IPC replies)"
+        printf '%s\n' "$raw"
+    fi
+}
+
+cmd_next() {
+    [ -x "$SCRIPT_DIR/next_wallpaper.sh" ] || die "next_wallpaper.sh not found next to lw-cli ($SCRIPT_DIR)."
+    exec "$SCRIPT_DIR/next_wallpaper.sh" "$MONITOR_OVERRIDE"
+}
+
+cmd_prev() {
+    [ -x "$SCRIPT_DIR/previous_wallpaper.sh" ] || die "previous_wallpaper.sh not found next to lw-cli ($SCRIPT_DIR)."
+    exec "$SCRIPT_DIR/previous_wallpaper.sh" "$MONITOR_OVERRIDE"
+}
+
+case "$CMD" in
+    next)   cmd_next ;;
+    prev)   cmd_prev ;;
+    toggle) cmd_toggle ;;
+    file)   cmd_file "${1:-}" ;;
+    status) cmd_status ;;
+    -h|--help|help) usage ;;
+    *) usage; exit 1 ;;
+esac
