@@ -1,0 +1,25 @@
+# Normalize line endings for all text files on checkout
+* text=auto
+
+# Ensure scripts always use LF (shebangs break with CRLF)
+*.sh   text eol=lf
+*.bash text eol=lf
+*.py   text eol=lf
+*.nix  text eol=lf
+
+# QML/JS assets — text, normalize
+*.qml  text
+*.js   text
+*.css  text
+*.html text
+
+# Binary files — no normalization, no diff
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.svg  text
+
+# Lock files — no merge, no diff
+flake.lock -diff
